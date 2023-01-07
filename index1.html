@@ -19,22 +19,78 @@
     <label for="">Name</label>
     <input type="text" name="username" required/>
     <label for="">emailid</label>
-    <input type="email" name="emailid" required/>
+    <input type="email" name="emailid" id="email" required/>
     <label for="">phone Number</label>
-    <input type="tel" name="phonenumber" required/>
+    <input type="tel" name="phonenumber" >
     <button>submit</button>
     </form>
+    <ul id="listofusers"></ul>
 <script>
-    function savetolocalstorage(event){
+    function savetolocalstorage(event)
+    {
         event.preventDefault();
         const name=event.target.username.value;
         const email=event.target.emailid.value;
         const phonenumber=event.target.phonenumber.value;
-        localStorage.setItem('name',name);
-        localStorage.setItem('email',email);
-        localStorage.setItem('phonenumber',phonenumber);
+        //localStorage.setItem('name',name);
+        //localStorage.setItem('email',email);
+        //localStorage.setItem('phonenumber',phonenumber);
+        const obj={
+            name:name,
+            email:email,
+            phonenumber:phonenumber
+        }
+        localStorage.setItem(obj.email,JSON.stringify(obj));
+        shownewuseronscreen(obj);
+}
+/*function shownewuseronscreen(user){
+    const parentnode=document.getElementById("listofusers");
+    
+    const childHTML=`<li> ${user.name}-${user.email}<span><button>delete</button></span><span><button>edit</button></span></li>`;
+    
+    parentnode.innerHTML=parentnode.innerHTML+childHTML;
+}*/
 
-    }
+window.addEventListener("DOMContentLoaded", () => {
+                const localStorageObj = localStorage;
+                const localstoragekeys  = Object.keys(localStorageObj)
+
+                for(var i =0; i< localstoragekeys.length; i++){
+                    const key = localstoragekeys[i]
+                    const userDetailsString = localStorageObj[key];
+                    const userDetailsObj = JSON.parse(userDetailsString);
+                    showNewUserOnScreen(userDetailsObj)
+                }
+            })
+
+            function showNewUserOnScreen(user){
+                const parentNode = document.getElementById('listOfUsers');
+                const childHTML = `<li id=${user.email}> ${user.name} - ${user.email}
+                                        <button onclick=deleteUser('${user.email}')> Delete User </button>
+                                     </li>`
+
+                parentNode.innerHTML = parentNode.innerHTML + childHTML;
+            }
+
+            // deleteUser('abc@gmail.com')
+
+            function deleteUser(email){
+                console.log(email)
+                localStorage.removeItem(email);
+                removeUserFromScreen(email);
+
+            }
+
+            function removeUserFromScreen(email){
+                const parentNode = document.getElementById('listOfUsers');
+                const childNodeToBeDeleted = document.getElementById(email);
+
+                parentNode.removeChild(childNodeToBeDeleted)
+            }
+
+
+
+
 </script>
    
 </body>
