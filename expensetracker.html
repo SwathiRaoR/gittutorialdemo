@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+     <link rel="stylesheet" href="bootstrp.css">
+    <title>Document</title>
+</head>
+<body>
+    <header id="main-header" class="bg-success text-white p-4 mb-3">
+        <div class="container">
+          <h1 id="header-title">Expense Tracker</h1>
+        </div>
+      </header>
+      <div class="container">
+        <div id="main" class="card card-body">
+         <h2 class="title">Track your expenses</h2>
+    <form onsubmit="saveToLocalStorage(event)">
+        <label  class="form-label"> Expense Amount</label>
+        <input type="number" name="expense" id="expen"  class="form-control" required/><br>
+        <label  class="form-label"> Expense Description</label>
+        <input type="text" name="description" id="descri" class="form-control" required/><br>
+        <label  class="form-label"> Expense Category</label>
+        <select  id="category" class="form-select form-select-sm" name="selectoption"><br>
+            <option value="">movies</option>
+            <option value="">rent</option>
+            <option value="">bills</option>
+            <option value="">others</option>
+        </select><br>
+        <button type="submit" class="btn btn-success btn-block" > ADD </button>
+    
+    </form>
+</div>
+</div>
+    <div class="container">
+    <div id="main" class="card card-body">
+    <ul id='listOfitems'></ul>
+    <ul class="list-group list-group-flush" id='listOfUsers'></ul>
+    </div>
+    </div>
+   <script>
+        function saveToLocalStorage(event) {
+                event.preventDefault();
+                const exp = document.getElementById("expen").value;
+                const desc = document.getElementById("descri").value;
+                //const phonenumber=event.target.selectoption.value;
+                const val=document.getElementById("category").options[(document.getElementById("category")).selectedIndex].text;
+                console.log(val);
+    
+                 
+                // localStorage.setItem('name', name);
+                // localStorage.setItem('email', email);
+                // localStorage.setItem('phonenumber', phonenumber)
+                const obj = {
+                   eexp: exp,
+                    edes:desc,
+                    eval:val
+                  //  phonenumber
+                }
+                localStorage.setItem(obj.edes, JSON.stringify(obj)) 
+                var objde=JSON.parse(localStorage.getItem(obj.edes));
+                console.log(objde);
+                newuser(objde);
+            }
+            function newuser(user){
+                const parentNode = document.getElementById('listOfUsers');
+                const childHTML = `<li class="list-group-item" id="lists"> ${user.eexp} - ${user.edes}-${user.eval}<button class="btn btn-outline-success btn-sm" onclick=edituser('${user.eexp}','${user.edes}','${user.eval}')>Edit Expenses</button> <button id="delete" class="btn btn-outline-success btn-sm" onclick=deluser('${user.edes}') > Delete Expenses </button> </li>`
+                parentNode.innerHTML = parentNode.innerHTML + childHTML;
+            }
+            function edituser(eexp,edes,eval){
+                document.getElementById("expen").value=eexp;
+                document.getElementById("descri").value=edes;
+                document.getElementById("category").options[(document.getElementById("category")).selectedIndex].text=eval;
+                deluser(edes);
+                }  
+            function deluser(edes) {
+                 localStorage.removeItem(edes);
+                 removeUserFromScreen(edes) 
+                       }  
+            function removeUserFromScreen(edes){
+                const parentNode = document.getElementById('listOfUsers');
+                const childNodeToBeDeleted = document.getElementById('lists');
+                if(childNodeToBeDeleted) {
+                    parentNode.removeChild(childNodeToBeDeleted)
+                }
+            }
+      </script>
+</body>
+</html>
